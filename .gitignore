@@ -3,3 +3,4 @@
 **/build
 output/
 **/testing/
+releaseflow.sh
