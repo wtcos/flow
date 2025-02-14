@@ -22,13 +22,28 @@ public class Recorder {
     }
 
     public void logRun() {
+        initializeIfNeeded();
         writeToLog(gitInfo, new TimestampAppender(), new RunAppender());
     }
 
     public void logTest(List<String> passes, List<String> fails, List<String> disables, List<String> aborts) {
+        initializeIfNeeded();
         writeToLog(gitInfo,
                 new TimestampAppender(),
                 new TestAppender("test", passes, fails, disables, aborts));
+    }
+
+    public void initializeIfNeeded() {
+        var initializer = new Initializer(gitInfo.root);
+        if(initializer.shouldInitialize()) {
+            try {
+                initializer.emitCommitHooks();
+                initializer.emitJunitFiles();
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void logPostCommit() {

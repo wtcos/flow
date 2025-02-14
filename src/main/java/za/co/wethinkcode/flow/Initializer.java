@@ -1,5 +1,7 @@
 package za.co.wethinkcode.flow;
 
+import org.eclipse.jgit.api.*;
+
 import java.io.*;
 import java.nio.file.*;
 
@@ -13,7 +15,6 @@ public class Initializer {
     public Initializer(Path path) {
         projectRoot = path;
         gitRoot = requireGitRoot(projectRoot);
-
     }
 
     public Boolean shouldInitialize() {
@@ -36,6 +37,15 @@ public class Initializer {
         writer.write("za.co.wethinkcode.flow.WtcJunitExtension\n");
         writer.flush();
         writer.close();
+        try {
+            Git git = Git.open(gitRoot.toFile());
+            git.add().addFilepattern("src/test/resources").call();
+            git.commit().setMessage("Adding flow src/test/resources.").call();
+            git.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void emitCommitHooks() throws IOException {

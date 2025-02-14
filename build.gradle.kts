@@ -40,12 +40,17 @@ deployer {
     // 2. Project details.
     // https://opensource.deepmedia.io/deployer/configuration
     projectInfo {
+        version = "0.0.2"
         description.set("A sample project to showcase Maven Central publications.")
         url.set("https://github.com/wethinkcode/flow")
         scm.fromGithub("wethinkcode", "flow")
         license(MIT)
         developer("wtcos", "opensource@wethinkcode.co.za", "WeThinkCode", "https://wethinkcode.co.za")
         groupId.set("za.co.wethinkcode")
+    }
+
+    localSpec {
+
     }
 
     // 3. Central Portal configuration.
