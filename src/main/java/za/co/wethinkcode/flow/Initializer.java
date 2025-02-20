@@ -76,17 +76,14 @@ public class Initializer {
             #!/bin/bash
             pwd
             if [ -e .commit ] ; then
+              echo "Post-Commit"
               TIMESTAMP=`date +%Y%m%d%H%M%S`
               BRANCH=`git rev-parse --abbrev-ref HEAD`
               IFS="@" read -r NAME EMAIL <<< `git config user.email`
               TEMPNAME=".flow/${BRANCH}_${NAME}.flot"
               FINALNAME=".flow/${BRANCH}_${NAME}_${TIMESTAMP}.flol"
-              echo $TEMPNAME
-              echo $FINALNAME
-              echo "Post-Commit"
               rm .commit
               if [ -e $TEMPNAME ] ; then
-                echo "Adding."
                 mv $TEMPNAME $FINALNAME
                 git add -f $FINALNAME
                 git commit --amend -C HEAD --no-verify
