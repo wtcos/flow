@@ -40,7 +40,7 @@ deployer {
     // 2. Project details.
     // https://opensource.deepmedia.io/deployer/configuration
     projectInfo {
-        version = "1.0.0"
+        version = "1.0.1"
         description.set("A sample project to showcase Maven Central publications.")
         url.set("https://github.com/wethinkcode/flow")
         scm.fromGithub("wethinkcode", "flow")
