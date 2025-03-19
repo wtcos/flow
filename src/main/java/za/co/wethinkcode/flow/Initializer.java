@@ -80,8 +80,8 @@ public class Initializer {
               TIMESTAMP=`date +%Y%m%d%H%M%S`
               BRANCH=`git rev-parse --abbrev-ref HEAD`
               IFS="@" read -r NAME EMAIL <<< `git config user.email`
-              TEMPNAME=".flow/${BRANCH}_${NAME}.flot"
-              FINALNAME=".flow/${BRANCH}_${NAME}_${TIMESTAMP}.flol"
+              TEMPNAME=".lms/.flow/${BRANCH}_${NAME}.flot"
+              FINALNAME="./lms/.flow/${BRANCH}_${NAME}_${TIMESTAMP}.flol"
               rm .commit
               if [ -e $TEMPNAME ] ; then
                 mv $TEMPNAME $FINALNAME
