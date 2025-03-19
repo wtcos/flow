@@ -4,7 +4,7 @@ import java.io.*;
 import java.nio.file.*;
 
 public class FileHelpers {
-    public static final String JLTK_FOLDER = ".flow";
+    public static final String JLTK_FOLDER = ".lms/.flow";
     public static final String JLTK_LOG_SUFFIX = ".flol";
     public static final String JLTK_TMP_SUFFIX = ".flot";
     public static final String JLTK_AUTHOR_FILE = "author.txt";

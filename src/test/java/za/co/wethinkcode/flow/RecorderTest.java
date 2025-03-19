@@ -16,6 +16,7 @@ public class RecorderTest {
 
     @Test
     void roundTripTemporaryLog() throws IOException {
+        folder.makeGitFolder();
         Recorder first = new Recorder(info);
         first.logRun();
         File[] temps = folder.temporaryFiles();
@@ -30,6 +31,7 @@ public class RecorderTest {
 
     @Test
     void roundTripTwiceTemporaryLog() throws IOException {
+        folder.makeGitFolder();
         Recorder first = new Recorder(info);
         first.logRun();
         Recorder second = new Recorder(info);
@@ -49,6 +51,7 @@ public class RecorderTest {
 
     @Test
     void roundTripFinalLog() throws IOException {
+        folder.makeGitFolder();
         Recorder first = new Recorder(info);
         first.logPostCommit();
         File[] temps = folder.temporaryFiles();
