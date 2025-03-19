@@ -75,9 +75,14 @@ public class TestFolder {
         }
     }
 
-    public void makeGitFolder() throws GitAPIException {
-        Git git = Git.init().setDirectory(root.toFile()).call();
-        git.close();
+    public void makeGitFolder() {
+        try {
+            Git git = Git.init().setDirectory(root.toFile()).call();
+            git.close();
+        }
+        catch(Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
 

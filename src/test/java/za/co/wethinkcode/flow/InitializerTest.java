@@ -17,8 +17,7 @@ public class InitializerTest {
     public void authorFilePresentMeansNoInitialization() throws IOException {
         Path authorPath = folder.root.resolve("author.txt");
         Files.createFile(authorPath);
-        Path gitFolder = folder.root.resolve(".git");
-        Files.createDirectories(gitFolder);
+        folder.makeGitFolder();
         Initializer initializer = new Initializer(folder.root);
         assertFalse(initializer.shouldInitialize());
         folder.delete();
@@ -26,8 +25,7 @@ public class InitializerTest {
 
     @Test
     public void noAuthorFileButFlowFolderMeansNoInitialization() throws IOException {
-        Path gitFolder = folder.root.resolve(".git");
-        Files.createDirectories(gitFolder);
+        folder.makeGitFolder();
         Path flowFolder = folder.root.resolve(JLTK_FOLDER);
         Files.createDirectories(flowFolder);
         Initializer initializer = new Initializer(folder.root);
@@ -37,8 +35,7 @@ public class InitializerTest {
 
     @Test
     public void noAuthorFileNoFlowShouldInitialize() throws IOException {
-        Path gitFolder = folder.root.resolve(".git");
-        Files.createDirectories(gitFolder);
+        folder.makeGitFolder();
         Initializer initializer = new Initializer(folder.root);
         assertTrue(initializer.shouldInitialize());
         folder.delete();
@@ -46,8 +43,7 @@ public class InitializerTest {
 
     @Test
     public void initializeEmitsJunitFiles() throws IOException {
-        Path gitFolder = folder.root.resolve(".git");
-        Files.createDirectories(gitFolder);
+        folder.makeGitFolder();
         Initializer initializer = new Initializer(folder.root);
         initializer.emitJunitFiles();
         Path junitProperties = folder.root
@@ -69,5 +65,6 @@ public class InitializerTest {
         Path postCommitHook = hooksPath.resolve("post-commit");
         assertTrue(preCommitHook.toFile().exists());
         assertTrue(postCommitHook.toFile().exists());
+        folder.delete();
     }
 }
