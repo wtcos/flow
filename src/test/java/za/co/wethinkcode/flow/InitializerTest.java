@@ -15,7 +15,7 @@ public class InitializerTest {
 
     @Test
     public void authorFilePresentMeansNoInitialization() throws IOException {
-        Path authorPath = folder.root.resolve("author.txt");
+        Path authorPath = folder.root.resolve(JLTK_AUTHOR_FILE);
         Files.createFile(authorPath);
         folder.makeGitFolder();
         Initializer initializer = new Initializer(folder.root);
