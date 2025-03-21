@@ -2,6 +2,8 @@ package za.co.wethinkcode.flow;
 
 import org.eclipse.jgit.api.*;
 import org.eclipse.jgit.api.errors.*;
+import org.eclipse.jgit.lib.*;
+import org.eclipse.jgit.storage.file.*;
 import za.co.wethinkcode.flow.bash.*;
 
 import java.io.*;
@@ -84,6 +86,18 @@ public class TestFolder {
         try {
             Git git = Git.init().setDirectory(root.toFile()).call();
             git.close();
+        }
+        catch(Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Status gitStatus() {
+        try {
+            Git git = Git.open(root.toFile());
+            Status status = git.status().call();
+            git.close();
+            return status;
         }
         catch(Exception e) {
             throw new RuntimeException(e);

@@ -23,6 +23,8 @@ public class CommitHooksTest {
         var files = Files.list(folder.root.resolve(JLTK_FOLDER)).toArray();
         assertThat(files.length).isEqualTo(1);
         assertTrue(files[0].toString().endsWith(".flol"));
+        var status = folder.gitStatus();
+        assertThat(status.hasUncommittedChanges()).isFalse();
         folder.delete();
     }
 
