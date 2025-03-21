@@ -1,0 +1,1 @@
+echo $EXERCISE_FOLDER
