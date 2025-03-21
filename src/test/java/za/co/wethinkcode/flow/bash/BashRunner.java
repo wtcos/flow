@@ -22,14 +22,13 @@ public class BashRunner {
         this.workingFolder = workingFolder;
     }
 
-    BashResult bash(Path submission) {
+    public BashResult bash() {
         BashStreamConsumer stdout = new BashStreamConsumer();
         BashStreamConsumer stderr = new BashStreamConsumer();
 
         var builder = new ProcBuilder(args.get(0))
                 .ignoreExitStatus()
                 .withTimeoutMillis(TIMEOUT_MS)
-                .withVar("EXERCISE_FOLDER", submission.toString())
                 .withErrorConsumer(stderr)
                 .withOutputConsumer(stdout)
                 .withWorkingDirectory(workingFolder.toFile());

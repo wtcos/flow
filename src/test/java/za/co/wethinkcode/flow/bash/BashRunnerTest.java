@@ -21,14 +21,14 @@ class BashRunnerTest {
     @Test
     void handlesNonExistingShell() throws IOException {
         var bash = new BashRunner(NON_EXISTING_SH, shellFolder);
-        var result = bash.bash(exerciseFolder);
+        var result = bash.bash();
         assertThat(result.code).isNotEqualTo(0);
     }
 
     @Test
     void handlesNonZeroShell() throws IOException {
         var bash = new BashRunner(FAILED_SH, shellFolder);
-        var result = bash.bash(exerciseFolder);
+        var result = bash.bash();
         assertThat(result.code).isEqualTo(1);
     }
 
@@ -36,7 +36,7 @@ class BashRunnerTest {
     @Test
     void handlesZeroShell() throws IOException {
         var bash = new BashRunner(EXISTING_SH, shellFolder);
-        var result = bash.bash(exerciseFolder);
+        var result = bash.bash();
         System.out.println(result.stdout);
         System.out.println(result.stderr);
         assertThat(result.code).isEqualTo(0);
@@ -45,7 +45,7 @@ class BashRunnerTest {
     @Test
     void capturesStdErr() throws IOException {
         var bash = new BashRunner(STDERR_SH, shellFolder);
-        var result = bash.bash(exerciseFolder);
+        var result = bash.bash();
         assertThat(result.stderr.next()).isEqualTo("This is on stderr.");
         assertThat(result.code).isEqualTo(0);
     }
@@ -53,7 +53,7 @@ class BashRunnerTest {
     @Test
     void capturesStdOut() throws IOException {
         var bash = new BashRunner(STDOUT_SH, shellFolder);
-        var result = bash.bash(exerciseFolder);
+        var result = bash.bash();
         assertThat(result.stdout.next()).isEqualTo("This is on stdout.");
         assertThat(result.code).isEqualTo(0);
     }
