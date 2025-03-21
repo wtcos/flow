@@ -16,25 +16,35 @@ public class BashRunner {
 
     public final List<String> args;
     final Path workingFolder;
+    final String bashPath;
 
-    public BashRunner(List<String> args, Path workingFolder) {
+    public BashRunner(String bashPath,Path workingFolder, List<String> args) {
+        this.bashPath = bashPath;
         this.args = args;
         this.workingFolder = workingFolder;
+    }
+
+
+    public BashRunner(Path workingFolder, List<String> args) {
+        this(bashPath(), workingFolder, args);
+    }
+
+    public BashRunner(Path workingFolder, String... args) {
+        this(bashPath(), workingFolder, Arrays.asList(args));
     }
 
     public BashResult bash() {
         BashStreamConsumer stdout = new BashStreamConsumer();
         BashStreamConsumer stderr = new BashStreamConsumer();
 
-        var builder = new ProcBuilder(args.get(0))
+        var builder = new ProcBuilder(bashPath())
                 .ignoreExitStatus()
                 .withTimeoutMillis(TIMEOUT_MS)
                 .withErrorConsumer(stderr)
                 .withOutputConsumer(stdout)
                 .withWorkingDirectory(workingFolder.toFile());
-        IntStream.range(1, args.size()).mapToObj(args::get).forEach(builder::withArg);
+        IntStream.range(0, args.size()).mapToObj(args::get).forEach(builder::withArg);
         try {
-            System.out.println("Working [" + workingFolder.toString() + "]");
             var result = builder.run();
             stderr.thread.join();
             stdout.thread.join();

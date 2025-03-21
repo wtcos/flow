@@ -2,6 +2,7 @@ package za.co.wethinkcode.flow;
 
 import org.eclipse.jgit.api.*;
 import org.eclipse.jgit.api.errors.*;
+import za.co.wethinkcode.flow.bash.*;
 
 import java.io.*;
 import java.nio.file.*;
@@ -45,6 +46,10 @@ public class TestFolder {
     void recursivelyDelete(File directoryToBeDeleted) {
         recursivelyWipe(directoryToBeDeleted);
         directoryToBeDeleted.delete();
+    }
+
+    BashResult bash(String... args) {
+        return new BashRunner(root,args).bash();
     }
 
     private void recursivelyWipe(File directoryToBeDeleted) {

@@ -5,9 +5,9 @@ import za.co.wethinkcode.flow.bash.*;
 
 import java.io.*;
 import java.nio.file.*;
-import java.util.*;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static za.co.wethinkcode.flow.FileHelpers.JLTK_FOLDER;
 
 public class CommitHooksTest {
@@ -15,22 +15,15 @@ public class CommitHooksTest {
     TestFolder folder = new TestFolder();
 
     @Test
-    void commitHooksInvoked() throws IOException {
+    void postCommitCreatesFlolFile() throws IOException {
         folder.makeGitFolder();
         new Recorder(new GitInfo(folder.root)).logRun();
-        preCommit();
-        postCommit();
-        Files.list(folder.root.resolve(JLTK_FOLDER)).forEach(file -> {
-           assertThat(file.toString().endsWith(".flot")).isFalse();
-        });
+        folder.bash(".git/hooks/pre-commit");
+        folder.bash( ".git/hooks/post-commit");
+        var files = Files.list(folder.root.resolve(JLTK_FOLDER)).toArray();
+        assertThat(files.length).isEqualTo(1);
+        assertTrue(files[0].toString().endsWith(".flol"));
         folder.delete();
     }
 
-    private BashResult postCommit() {
-        return new BashRunner(List.of(BashRunner.bashPath(), ".git/hooks/post-commit"), folder.root).bash();
-    }
-
-    private BashResult preCommit() {
-        return new BashRunner(List.of(BashRunner.bashPath(), ".git/hooks/pre-commit"), folder.root).bash();
-    }
 }
