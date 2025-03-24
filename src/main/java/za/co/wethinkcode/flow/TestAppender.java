@@ -2,6 +2,11 @@ package za.co.wethinkcode.flow;
 
 import java.util.*;
 
+/**
+ * A MapAppender that knows what information to add for a
+ * test run. It adds the type of the run and four lists of
+ * passed, failed, disabled, or aborted tests.
+ */
 public class TestAppender implements MapAppender {
 
     public final String type;

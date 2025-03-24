@@ -5,7 +5,7 @@ import org.junit.jupiter.api.extension.*;
 import java.lang.reflect.*;
 import java.util.*;
 
-public class WtcJunitExtension implements TestWatcher, BeforeAllCallback, AfterAllCallback {
+public class WtcJunitExtension implements TestWatcher {
 
     public WtcJunitExtension() {
 
@@ -38,14 +38,6 @@ public class WtcJunitExtension implements TestWatcher, BeforeAllCallback, AfterA
     public void testFailed(ExtensionContext context, Throwable cause) {
         if (context == null) return;
         fails.add(niceTestName(context));
-    }
-
-    @Override
-    public void afterAll(ExtensionContext extensionContext) throws Exception {
-    }
-
-    @Override
-    public void beforeAll(ExtensionContext extensionContext) throws Exception {
     }
 
     static Recorder recorder = new Recorder();

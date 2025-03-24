@@ -7,16 +7,43 @@ import java.nio.file.*;
 
 import static za.co.wethinkcode.flow.FileHelpers.*;
 
+/**
+ * Specialist in initializing flow projects.
+ */
 public class Initializer {
 
+    /**
+     * The project's root folder, supplied by caller.
+     * It is normally the folder containing pom.xml or gradle.build.*.
+     */
     Path projectRoot;
+
+    /**
+     * The projects git root folder, deduced from the projectRoot.
+     * This is the folder that owns the .git folder, which may be
+     * the same as the projectRoot, or may be an ancestor folder. The
+     * latter is normally the case in authoring projects.
+     */
     Path gitRoot;
 
-    public Initializer(Path path) {
-        projectRoot = path;
+    /**
+     * Create an initializer with the given projectRoot.
+     * @param project the root of the project's make/pom/gradle files.
+     */
+    public Initializer(Path project) {
+        projectRoot = project;
         gitRoot = requireGitRoot(projectRoot);
     }
 
+    /**
+     * Test the root to see if we need to initialize it.
+     *
+     * If the gitroot folder contains a file named "author.txt",
+     * we do not need to initialize it.
+     * if the projectroot contins .lms/.flow it is already initialized.
+     * Otherwise, we will initialize it.
+     * @return true if we should initialize.
+     */
     public Boolean shouldInitialize() {
         Path authorPath = gitRoot.resolve("author.txt");
         if (authorPath.toFile().exists()) return false;
@@ -25,6 +52,14 @@ public class Initializer {
         return true;
     }
 
+    /**
+     * when we initizlize, we have to add two files to the
+     * src/test/resources folder to make junit call our recorder.
+     * This function adds those two files and quietly commits them to
+     * the repo.
+     *
+     * @throws IOException
+     */
     public void emitJunitFiles() throws IOException {
         projectRoot.resolve("src/test/resources/META-INF/services/").toFile().mkdirs();
         Path propertiesPath = projectRoot.resolve("src/test/resources/junit-platform.properties");
@@ -48,6 +83,12 @@ public class Initializer {
         }
     }
 
+    /**
+     * When we initialize, we add two client-side hooks, one for
+     * pre-commit, and one for post-commit.
+     *
+     * @throws IOException
+     */
     public void emitCommitHooks() throws IOException {
         Path precommit = gitRoot.resolve(".git/hooks/pre-commit");
         writeAll(precommit, precommitText);
@@ -57,7 +98,7 @@ public class Initializer {
         postcommit.toFile().setExecutable(true);
     }
 
-    public void writeAll(Path path, String text) throws IOException {
+    private void writeAll(Path path, String text) throws IOException {
         BufferedWriter writer = Files.newBufferedWriter(path);
         writer.write(text);
         writer.flush();
@@ -65,14 +106,14 @@ public class Initializer {
     }
 
 
-    static String precommitText = """
+    private static final String precommitText = """
             #!/bin/bash
 
             echo "Pre-Commit"
             touch .commit
             """;
 
-    static String postcommitText = """
+    private static final String postcommitText = """
             #!/bin/bash
             pwd
             if [ -e .commit ] ; then
