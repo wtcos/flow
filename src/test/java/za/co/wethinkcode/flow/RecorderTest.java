@@ -16,7 +16,7 @@ public class RecorderTest {
 
     @Test
     void roundTripTemporaryLog() throws IOException {
-        folder.makeGitFolder();
+        folder.initGitRepo();
         Recorder first = new Recorder(info);
         first.logRun();
         File[] temps = folder.temporaryFiles();
@@ -31,7 +31,7 @@ public class RecorderTest {
 
     @Test
     void roundTripTwiceTemporaryLog() throws IOException {
-        folder.makeGitFolder();
+        folder.initGitRepo();
         Recorder first = new Recorder(info);
         first.logRun();
         Recorder second = new Recorder(info);
@@ -46,24 +46,6 @@ public class RecorderTest {
         String secondEntry = new String(Base64.getDecoder().decode(lines.get(1)));
         String[] secondYaml = secondEntry.split("\n");
         assertEquals(secondYaml[5], "type: test");
-        folder.delete();
-    }
-
-    @Test
-    void roundTripFinalLog() throws IOException {
-        folder.makeGitFolder();
-        Recorder first = new Recorder(info);
-        first.logPostCommit();
-        File[] temps = folder.temporaryFiles();
-        assertEquals(0, temps.length);
-        File[] finals = folder.finalFiles();
-        assertEquals(1, finals.length);
-        List<String> lines = Files.readAllLines(finals[0].toPath());
-        assertEquals(1, lines.size());
-        String firstEntry = new String(Base64.getDecoder().decode(lines.get(0)));
-        String[] firstYaml = firstEntry.split("\n");
-        assertEquals(firstYaml[5], "type: commit");
-        assertFalse(folder.rootWtc.resolve("jltk.key").toFile().exists());
         folder.delete();
     }
 }

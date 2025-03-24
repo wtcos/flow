@@ -46,17 +46,6 @@ public class Recorder {
         }
     }
 
-    public void logPostCommit() {
-        writeToLog(gitInfo, new TimestampAppender(), new CommitAppender());
-        String repoLogname = makeFinalLogName();
-        Path destination = gitInfo.root.resolve(FileHelpers.JLTK_FOLDER).resolve(repoLogname);
-        try {
-            Files.move(logPath, destination);
-        } catch (Exception output) {
-            output.printStackTrace(System.err);
-        }
-    }
-
     private String makeFinalLogName() {
         DateTimeFormatter filetimeFormatter = DateTimeFormatter.ofPattern("yyyyMMddkkmmss");
         String filestamp = LocalDateTime.now().format(filetimeFormatter);
@@ -64,7 +53,7 @@ public class Recorder {
         String leafName = gitInfo.branch
                 + "_" + shortEmail
                 + "_" + filestamp +
-                JLTK_LOG_SUFFIX;
+                FLOW_LOG_SUFFIX;
         return leafName;
     }
 
@@ -73,7 +62,7 @@ public class Recorder {
             forceJltkFolder();
             YamlMap map = new YamlMap();
             map.append(appenders);
-            String yaml = map.asString();
+            String yaml = map.asYamlString();
             String encoded = Base64.getEncoder().encodeToString(yaml.getBytes());
             appendToLogFile(encoded);
         } catch (Exception e) {
@@ -84,7 +73,7 @@ public class Recorder {
     }
 
     private void forceJltkFolder() throws IOException {
-        Files.createDirectories(gitInfo.root.resolve(FileHelpers.JLTK_FOLDER));
+        Files.createDirectories(gitInfo.root.resolve(FileHelpers.FLOW_FOLDER));
     }
 
 

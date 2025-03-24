@@ -20,7 +20,7 @@ public class Initializer {
     public Boolean shouldInitialize() {
         Path authorPath = gitRoot.resolve("author.txt");
         if (authorPath.toFile().exists()) return false;
-        Path flowFolder = projectRoot.resolve(JLTK_FOLDER);
+        Path flowFolder = projectRoot.resolve(FLOW_FOLDER);
         if (flowFolder.toFile().exists()) return false;
         return true;
     }

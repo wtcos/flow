@@ -1,9 +1,6 @@
 package za.co.wethinkcode.flow;
 
 import org.eclipse.jgit.api.*;
-import org.eclipse.jgit.api.errors.*;
-import org.eclipse.jgit.lib.*;
-import org.eclipse.jgit.storage.file.*;
 import za.co.wethinkcode.flow.bash.*;
 
 import java.io.*;
@@ -19,7 +16,7 @@ public class TestFolder {
 
     public TestFolder(Path root) {
         this.root = root;
-        this.rootWtc = root.resolve(FileHelpers.JLTK_FOLDER);
+        this.rootWtc = root.resolve(FileHelpers.FLOW_FOLDER);
         try {
             wipeRoot();
             Files.createDirectories(root);
@@ -82,7 +79,7 @@ public class TestFolder {
         }
     }
 
-    public void makeGitFolder() {
+    public void initGitRepo() {
         try {
             Git git = Git.init().setDirectory(root.toFile()).call();
             git.close();

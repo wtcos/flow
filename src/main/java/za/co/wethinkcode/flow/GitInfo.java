@@ -85,8 +85,8 @@ public class GitInfo implements MapAppender {
         String shortEmail = email.split("@")[0];
         String leafName = branch
                 + "_" + shortEmail
-                + JLTK_TMP_SUFFIX;
-        return root.resolve(Path.of(FileHelpers.JLTK_FOLDER, leafName));
+                + FLOW_TMP_SUFFIX;
+        return root.resolve(Path.of(FileHelpers.FLOW_FOLDER, leafName));
     }
 
     @Override

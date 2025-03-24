@@ -1,13 +1,15 @@
 package za.co.wethinkcode.flow;
 
-import org.yaml.snakeyaml.*;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
 import java.util.*;
 
 public class YamlMap extends LinkedHashMap<String, Object> {
-    public String asString() {
+    /**
+     * @return Properly formatted YAML string
+     */
+    public String asYamlString() {
         DumperOptions options = new DumperOptions();
         options.setExplicitStart(true);
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
@@ -15,6 +17,11 @@ public class YamlMap extends LinkedHashMap<String, Object> {
         return yaml.dump(this);
     }
 
+    /**
+     * Applies each of the given appenders to append their fields to this map.
+     *
+     * @param appenders a varargs list of appenders to be called.
+     */
     public void append(MapAppender... appenders) {
         for (int appender = 0; appender < appenders.length; appender++) {
             appenders[appender].putTo(this);

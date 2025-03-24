@@ -1,14 +1,13 @@
 package za.co.wethinkcode.flow;
 
 import org.junit.jupiter.api.*;
-import za.co.wethinkcode.flow.bash.*;
 
 import java.io.*;
 import java.nio.file.*;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static za.co.wethinkcode.flow.FileHelpers.JLTK_FOLDER;
+import static za.co.wethinkcode.flow.FileHelpers.FLOW_FOLDER;
 
 public class CommitHooksTest {
 
@@ -16,11 +15,11 @@ public class CommitHooksTest {
 
     @Test
     void postCommitCreatesFlolFile() throws IOException {
-        folder.makeGitFolder();
+        folder.initGitRepo();
         new Recorder(new GitInfo(folder.root)).logRun();
         folder.bash(".git/hooks/pre-commit");
         folder.bash( ".git/hooks/post-commit");
-        var files = Files.list(folder.root.resolve(JLTK_FOLDER)).toArray();
+        var files = Files.list(folder.root.resolve(FLOW_FOLDER)).toArray();
         assertThat(files.length).isEqualTo(1);
         assertTrue(files[0].toString().endsWith(".flol"));
         var status = folder.gitStatus();

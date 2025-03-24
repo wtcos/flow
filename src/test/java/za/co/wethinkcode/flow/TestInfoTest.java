@@ -35,7 +35,7 @@ public class TestInfoTest {
         TestAppender info = new TestAppender("test", passes, fails, disables, aborts);
         YamlMap map = new YamlMap();
         info.putTo(map);
-        String infoAsYaml = map.asString();
+        String infoAsYaml = map.asYamlString();
 
         Yaml yaml = new Yaml();
         Map<String, Object> actual = yaml.load(infoAsYaml);

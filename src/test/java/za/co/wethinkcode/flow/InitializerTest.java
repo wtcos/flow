@@ -17,7 +17,7 @@ public class InitializerTest {
     public void authorFilePresentMeansNoInitialization() throws IOException {
         Path authorPath = folder.root.resolve(JLTK_AUTHOR_FILE);
         Files.createFile(authorPath);
-        folder.makeGitFolder();
+        folder.initGitRepo();
         Initializer initializer = new Initializer(folder.root);
         assertFalse(initializer.shouldInitialize());
         folder.delete();
@@ -25,8 +25,8 @@ public class InitializerTest {
 
     @Test
     public void noAuthorFileButFlowFolderMeansNoInitialization() throws IOException {
-        folder.makeGitFolder();
-        Path flowFolder = folder.root.resolve(JLTK_FOLDER);
+        folder.initGitRepo();
+        Path flowFolder = folder.root.resolve(FLOW_FOLDER);
         Files.createDirectories(flowFolder);
         Initializer initializer = new Initializer(folder.root);
         assertFalse(initializer.shouldInitialize());
@@ -35,7 +35,7 @@ public class InitializerTest {
 
     @Test
     public void noAuthorFileNoFlowShouldInitialize() throws IOException {
-        folder.makeGitFolder();
+        folder.initGitRepo();
         Initializer initializer = new Initializer(folder.root);
         assertTrue(initializer.shouldInitialize());
         folder.delete();
@@ -43,7 +43,7 @@ public class InitializerTest {
 
     @Test
     public void initializeEmitsJunitFiles() throws IOException {
-        folder.makeGitFolder();
+        folder.initGitRepo();
         Initializer initializer = new Initializer(folder.root);
         initializer.emitJunitFiles();
         Path junitProperties = folder.root
@@ -56,7 +56,7 @@ public class InitializerTest {
 
     @Test
     public void initializeEmitsCommitHooks() throws GitAPIException, IOException {
-        folder.makeGitFolder();
+        folder.initGitRepo();
         Initializer initializer = new Initializer(folder.root);
         initializer.emitCommitHooks();
         Path hooksPath = folder.root.resolve(".git/hooks");
