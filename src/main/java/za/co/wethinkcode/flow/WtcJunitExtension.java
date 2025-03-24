@@ -46,7 +46,7 @@ public class WtcJunitExtension implements TestWatcher {
     static List<String> disables = new ArrayList<>();
     static List<String> aborts = new ArrayList<>();
 
-    static Runnable runnable = new Runnable() {
+    private static final Runnable runnable = new Runnable() {
         @Override
         public void run() {
             System.out.println("Shutdown");
