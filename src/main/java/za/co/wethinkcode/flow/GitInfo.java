@@ -12,6 +12,8 @@ import static za.co.wethinkcode.flow.FileHelpers.*;
 public class GitInfo implements MapAppender {
     /**
      * The root folder of the current repo.
+     *
+     * The root folder is the folder that is the immediate parent of the .git folder.
      */
     public final Path root;
 
@@ -81,6 +83,13 @@ public class GitInfo implements MapAppender {
         this(System.getProperty("user.dir"));
     }
 
+    /**
+     * Computes a filename and path for the flow temporary file.
+     *
+     * This is a combination of the git branch and the lefthand part of the git username.
+     *
+     * @return
+     */
     public Path computeTemporaryPath() {
         String shortEmail = email.split("@")[0];
         String leafName = branch
@@ -94,6 +103,7 @@ public class GitInfo implements MapAppender {
         map.put("branch", branch);
         map.put("committer", username);
         map.put("email", email);
+        map.put("last",last);
     }
 
     private String computeLastCommitHash(Repository localRepo) {

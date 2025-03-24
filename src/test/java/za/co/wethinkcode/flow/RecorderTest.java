@@ -25,7 +25,7 @@ public class RecorderTest {
         assertEquals(1, lines.size());
         String firstEntry = new String(Base64.getDecoder().decode(lines.get(0)));
         String[] resultYaml = firstEntry.split("\n");
-        assertEquals(resultYaml[5], "type: run");
+        assertEquals(resultYaml[6], "type: run");
         folder.delete();
     }
 
@@ -42,10 +42,10 @@ public class RecorderTest {
         assertEquals(2, lines.size());
         String firstEntry = new String(Base64.getDecoder().decode(lines.get(0)));
         String[] firstYaml = firstEntry.split("\n");
-        assertEquals(firstYaml[5], "type: run");
+        assertEquals(firstYaml[6], "type: run");
         String secondEntry = new String(Base64.getDecoder().decode(lines.get(1)));
         String[] secondYaml = secondEntry.split("\n");
-        assertEquals(secondYaml[5], "type: test");
+        assertEquals(secondYaml[6], "type: test");
         folder.delete();
     }
 }
