@@ -9,6 +9,10 @@ import java.util.*;
 
 import static za.co.wethinkcode.flow.FileHelpers.*;
 
+/**
+ * Class used to hold all the information Flow needs that comes from the
+ * git repo.
+ */
 public class GitInfo implements MapAppender {
     /**
      * The root folder of the current repo.
@@ -88,7 +92,7 @@ public class GitInfo implements MapAppender {
      *
      * This is a combination of the git branch and the lefthand part of the git username.
      *
-     * @return
+     * @return the resulting path.
      */
     public Path computeTemporaryPath() {
         String shortEmail = email.split("@")[0];

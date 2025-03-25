@@ -5,6 +5,11 @@ import org.yaml.snakeyaml.Yaml;
 
 import java.util.*;
 
+/**
+ * An ordinary LinkedHashMap with utility functions to add new keys indirectly
+ * by calling an appender, and to convert to its contents to
+ * well-formatted YAML string.
+ */
 public class YamlMap extends LinkedHashMap<String, Object> {
     /**
      * @return Properly formatted YAML string

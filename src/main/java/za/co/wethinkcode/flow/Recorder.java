@@ -8,24 +8,59 @@ import java.util.*;
 
 import static za.co.wethinkcode.flow.FileHelpers.*;
 
+/**
+ * The primary entry point to the Flow system. The key api's are logRun() to
+ * indicate a run of the app's main, and logTests() to indicate a run of some or
+ * all of the app's JUnit tests.
+ *
+ * Recorder is self-initialized. The
+ */
 public class Recorder {
     private final GitInfo gitInfo;
     private final Path logPath;
 
+    /**
+     * Explicit constructor, normally used only in tests, which takes a GitInfo,
+     * which may be hand-built.
+     *
+     * @param gitInfo The GitInfo needed for the Recorder's other functions.
+     */
     public Recorder(GitInfo gitInfo) {
         this.gitInfo = gitInfo;
         this.logPath = gitInfo.computeTemporaryPath();
     }
 
+    /**
+     * Constructor that assumes that the current working directory can supply the
+     * required GitInfo.
+     */
     public Recorder() {
         this(new GitInfo());
     }
 
+    /**
+     * Add an entry to the temporary log file indicating that main was run.
+     *
+     * This method is called from the static initializer block in the hosting
+     * applications main file.
+     */
     public void logRun() {
         initializeIfNeeded();
         writeToLog(gitInfo, new TimestampAppender(), new RunAppender());
     }
 
+    /**
+     * Add an entry to the temporary log file indicating that some or all JUnit
+     * tests were run.
+     *
+     * This method is called by the WtcJUnitExtension, indicating that some or all
+     * of the JUnit tests have been run.
+     *
+     * @param passes The list of test names that passed.
+     * @param fails The list of test names that failed.
+     * @param disables The list of test names that were disabled.
+     * @param aborts The list of test names that were aborted.
+     */
     public void logTest(List<String> passes, List<String> fails, List<String> disables, List<String> aborts) {
         initializeIfNeeded();
         writeToLog(gitInfo,
@@ -33,7 +68,7 @@ public class Recorder {
                 new TestAppender("test", passes, fails, disables, aborts));
     }
 
-    public void initializeIfNeeded() {
+    private void initializeIfNeeded() {
         var initializer = new Initializer(gitInfo.root);
         if(initializer.shouldInitialize()) {
             try {
@@ -46,18 +81,7 @@ public class Recorder {
         }
     }
 
-    private String makeFinalLogName() {
-        DateTimeFormatter filetimeFormatter = DateTimeFormatter.ofPattern("yyyyMMddkkmmss");
-        String filestamp = LocalDateTime.now().format(filetimeFormatter);
-        String shortEmail = gitInfo.email.split("@")[0];
-        String leafName = gitInfo.branch
-                + "_" + shortEmail
-                + "_" + filestamp +
-                FLOW_LOG_SUFFIX;
-        return leafName;
-    }
-
-    public void writeToLog(MapAppender... appenders) {
+    private void writeToLog(MapAppender... appenders) {
         try {
             forceJltkFolder();
             YamlMap map = new YamlMap();
@@ -75,7 +99,6 @@ public class Recorder {
     private void forceJltkFolder() throws IOException {
         Files.createDirectories(gitInfo.root.resolve(FileHelpers.FLOW_FOLDER));
     }
-
 
     private void appendToLogFile(String yaml) throws IOException {
         PrintWriter log = new PrintWriter(

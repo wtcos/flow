@@ -9,11 +9,11 @@ import java.util.*;
  */
 public class TestAppender implements MapAppender {
 
-    public final String type;
-    public final List<String> passes = new ArrayList<>();
-    public final List<String> fails = new ArrayList<>();
-    public final List<String> disables = new ArrayList<>();
-    public final List<String> aborts = new ArrayList<>();
+    private final String type;
+    private final List<String> passes = new ArrayList<>();
+    private final List<String> fails = new ArrayList<>();
+    private final List<String> disables = new ArrayList<>();
+    private final List<String> aborts = new ArrayList<>();
 
     /**
      * @param type     -- the type of the action

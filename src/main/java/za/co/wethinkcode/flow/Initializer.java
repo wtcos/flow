@@ -58,7 +58,7 @@ public class Initializer {
      * This function adds those two files and quietly commits them to
      * the repo.
      *
-     * @throws IOException
+     * @throws IOException If there are any difficulties at all
      */
     public void emitJunitFiles() throws IOException {
         projectRoot.resolve("src/test/resources/META-INF/services/").toFile().mkdirs();
@@ -87,7 +87,7 @@ public class Initializer {
      * When we initialize, we add two client-side hooks, one for
      * pre-commit, and one for post-commit.
      *
-     * @throws IOException
+     * @throws IOException if there are any difficulties at all
      */
     public void emitCommitHooks() throws IOException {
         Path precommit = gitRoot.resolve(".git/hooks/pre-commit");

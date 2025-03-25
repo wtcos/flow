@@ -2,6 +2,7 @@ package za.co.wethinkcode.flow;
 
 import org.junit.jupiter.api.*;
 import org.yaml.snakeyaml.*;
+import org.yaml.snakeyaml.Yaml;
 
 import java.util.*;
 
@@ -9,20 +10,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 public class TestInfoTest {
-
-    @Test
-    void testListsConstructorWorks() {
-        List<String> passes = Collections.singletonList("pass");
-        List<String> fails = Collections.singletonList("fail");
-        List<String> disables = Collections.singletonList("disable");
-        List<String> aborts = Collections.singletonList("abort");
-        TestAppender info = new TestAppender("test", passes, fails, disables, aborts);
-        assertEquals(info.type, "test");
-        assertTrue(info.passes.contains("pass"));
-        assertTrue(info.fails.contains("fail"));
-        assertTrue(info.disables.contains("disable"));
-        assertTrue(info.aborts.contains("abort"));
-    }
 
     @Test
     void yamlRoundtrip() {

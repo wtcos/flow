@@ -5,11 +5,11 @@ import org.junit.jupiter.api.extension.*;
 import java.lang.reflect.*;
 import java.util.*;
 
+/**
+ * A custom JUnitExtension that overrides JUnit's TestWatcher
+ * to remember test runs and add them to a Flow temp file on exit.
+ */
 public class WtcJunitExtension implements TestWatcher {
-
-    public WtcJunitExtension() {
-
-    }
 
     @Override
     public void testSuccessful(ExtensionContext context) {
@@ -40,11 +40,11 @@ public class WtcJunitExtension implements TestWatcher {
         fails.add(niceTestName(context));
     }
 
-    static Recorder recorder = new Recorder();
-    static List<String> passes = new ArrayList<>();
-    static List<String> fails = new ArrayList<>();
-    static List<String> disables = new ArrayList<>();
-    static List<String> aborts = new ArrayList<>();
+    private static final Recorder recorder = new Recorder();
+    private static final List<String> passes = new ArrayList<>();
+    private static final List<String> fails = new ArrayList<>();
+    private static final List<String> disables = new ArrayList<>();
+    private static final List<String> aborts = new ArrayList<>();
 
     private static final Runnable runnable = new Runnable() {
         @Override
@@ -53,8 +53,8 @@ public class WtcJunitExtension implements TestWatcher {
             recorder.logTest(passes, fails, disables, aborts);
         }
     };
-    static Thread hook = new Thread(runnable);
-    static Runtime runtime = Runtime.getRuntime();
+    private static final Thread hook = new Thread(runnable);
+    private static final Runtime runtime = Runtime.getRuntime();
 
     static {
         runtime.addShutdownHook(hook);

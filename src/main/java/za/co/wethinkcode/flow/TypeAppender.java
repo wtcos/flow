@@ -1,8 +1,15 @@
 package za.co.wethinkcode.flow;
 
+/**
+ * A MapAppender that appends a type field
+ */
 public class TypeAppender implements MapAppender {
-    public final String type;
+    private final String type;
 
+    /**
+     *
+     * @param type the type string
+     */
     public TypeAppender(String type) {
         this.type = type;
     }
