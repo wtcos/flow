@@ -42,8 +42,8 @@ deployer {
     // 2. Project details.
     // https://opensource.deepmedia.io/deployer/configuration
     projectInfo {
-        version = "1.0.1"
-        description.set("A sample project to showcase Maven Central publications.")
+        version = project.version.toString()
+        description.set("Flow is a tool to help programmers visualize and understand their workflow.")
         url.set("https://github.com/wethinkcode/flow")
         scm.fromGithub("wethinkcode", "flow")
         license(MIT)
