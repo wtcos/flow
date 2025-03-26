@@ -16,7 +16,7 @@ public class CommitHooksTest {
     @Test
     void postCommitCreatesFlolFile() throws IOException {
         folder.initGitRepo();
-        new Recorder(new GitInfo(folder.root)).logRun();
+        new Recorder(GitInfo.from(folder.root)).logRun();
         folder.bash(".git/hooks/pre-commit");
         folder.bash( ".git/hooks/post-commit");
         var files = Files.list(folder.root.resolve(FLOW_FOLDER)).toArray();

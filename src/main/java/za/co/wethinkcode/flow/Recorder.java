@@ -35,7 +35,7 @@ public class Recorder {
      * required GitInfo.
      */
     public Recorder() {
-        this(new GitInfo());
+        this(GitInfo.from());
     }
 
     /**

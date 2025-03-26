@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class RecorderTest {
 
     TestFolder folder = new TestFolder();
-    GitInfo info = new GitInfo(folder.root, "branch", "committer", "email@somewhere.com", "last");
+    GitInfo info = new GitInfo(folder.root, "branch", "committer", "email@somewhere.com", "last", new ArrayList<>());
 
     @Test
     void roundTripTemporaryLog() throws IOException {
