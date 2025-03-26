@@ -38,7 +38,6 @@ public class GitInfoTest {
         assertThat(info.problems).isNotEmpty();
     }
 
-
     @Test
     void worksOnThisRepo() {
         GitInfo info = GitInfo.from();
