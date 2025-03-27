@@ -1,5 +1,6 @@
 package za.co.wethinkcode.flow;
 
+import org.eclipse.jgit.api.*;
 import org.junit.jupiter.api.*;
 
 import java.io.*;
@@ -21,6 +22,7 @@ public class GitInfoTest {
         assertEquals("committer", info.username);
         assertEquals("email", info.email);
         assertEquals("last", info.last);
+        assertThat(info.problems).isEmpty();
     }
 
     @Test
@@ -36,17 +38,41 @@ public class GitInfoTest {
         Files.createDirectories(folder.root.resolve(".git"));
         GitInfo info = GitInfo.from(Path.of(System.getProperty("user.home")));
         assertThat(info.problems).isNotEmpty();
+        folder.delete();
+    }
+
+    @Test
+    void problemNoEmail() throws IOException {
+        TestFolder folder = new TestFolder();
+        folder.initGitRepo();
+        Git git = Git.open(folder.root.toFile());
+        var repo = git.getRepository();
+        var config = repo.getConfig();
+        config.setString("user",null,"email","");
+        config.save();
+        git.close();
+        GitInfo info = GitInfo.from(folder.root);
+        assertThat(info.problems).isNotEmpty();
+        folder.delete();
+    }
+
+    @Test
+    void problemNoUsername() throws IOException {
+        TestFolder folder = new TestFolder();
+        folder.initGitRepo();
+        Git git = Git.open(folder.root.toFile());
+        var repo = git.getRepository();
+        var config = repo.getConfig();
+        config.setString("user",null,"name","");
+        config.save();
+        git.close();
+        GitInfo info = GitInfo.from(folder.root);
+        assertThat(info.problems).isNotEmpty();
+        folder.delete();
     }
 
     @Test
     void worksOnThisRepo() {
-        GitInfo info = GitInfo.from();
-        String expected = Path.of(".").toAbsolutePath().normalize().toString();
-        assertEquals(expected, info.root.toAbsolutePath().normalize().toString());
-    }
-
-    @Test
-    void knowsRepoFolder() {
         GitInfo info = GitInfo.from();
         String expected = Path.of(".").toAbsolutePath().normalize().toString();
         assertEquals(expected, info.root.toAbsolutePath().normalize().toString());

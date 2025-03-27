@@ -110,10 +110,15 @@ public class GitInfo implements MapAppender {
         var root = localRepo.getWorkTree().toPath();
         Config configuration = localRepo.getConfig();
         var email = configuration.getString("user", null, "email");
-        if(!email.contains("@")) problems.add("Invalid email address in git repo ["+email+"].");
+        if(email==null || email.isEmpty() || !email.contains("@")) {
+            problems.add("Invalid email address in git repo [" + email + "].");
+        }
         var username = configuration.getString("user", null, "name");
+        if(username==null || username.isEmpty() || !username.contains("@")) {
+            problems.add("Invalid user name  in git repo [" + username + "].");
+        }
         var branch = tryBranch(localRepo);
-        return new GitInfo(root, branch, username, email, last, new ArrayList<>());
+        return new GitInfo(root, branch, username, email, last, problems);
     }
 
     static private String tryBranch(Repository localRepo) {
