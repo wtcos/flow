@@ -15,13 +15,14 @@ public class RecorderTest {
 
     TestFolder folder = new TestFolder();
     GitInfo info = new GitInfo(folder.root, "branch", "committer", "email@somewhere.com", "last", new ArrayList<>());
+    Boolean triedToExit = false;
 
     @Test
     void recorderNoopsOnDetachedHead() throws GitAPIException, IOException {
         folder.initDetachedHead();
         new Recorder(GitInfo.from(folder.root)).logRun();
         assertThat(folder.temporaryFiles().length).isEqualTo(0);
-        new Recorder(GitInfo.from(folder.root)).logTest(emptyList(),emptyList(),emptyList(),emptyList());
+        new Recorder(GitInfo.from(folder.root)).logTest(emptyList(), emptyList(), emptyList(), emptyList());
         assertThat(folder.temporaryFiles().length).isEqualTo(0);
         folder.delete();
     }
@@ -59,5 +60,17 @@ public class RecorderTest {
         String[] secondYaml = secondEntry.split("\n");
         assertEquals("type: test", secondYaml[6]);
         folder.delete();
+    }
+
+    @Test
+    void recorderBombsOnAnyProblem() {
+        GitInfo info = new GitInfo(folder.root, "branch", "committer", "email@somewhere.com", "last", singletonList("Any problem"));
+        new Recorder(info, this::triedToExit).logRun();
+        assertTrue(triedToExit);
+        folder.delete();
+    }
+
+    void triedToExit() {
+        triedToExit = true;
     }
 }

@@ -18,6 +18,7 @@ import static za.co.wethinkcode.flow.GitInfo.NO_BRANCH;
  */
 public class Recorder {
     private final GitInfo gitInfo;
+    private final Runnable exit;
 
     /**
      * Explicit constructor, normally used only in tests, which takes a GitInfo,
@@ -25,8 +26,17 @@ public class Recorder {
      *
      * @param gitInfo The GitInfo needed for the Recorder's other functions.
      */
-    public Recorder(GitInfo gitInfo) {
+    public Recorder(GitInfo gitInfo, Runnable exit) {
         this.gitInfo = gitInfo;
+        this.exit = exit;
+    }
+
+    /**
+     * Constructor that assumes that the current working directory can supply the
+     * required GitInfo.
+     */
+    public Recorder(GitInfo info) {
+        this(info,() -> System.exit(-1));
     }
 
     /**
@@ -34,7 +44,7 @@ public class Recorder {
      * required GitInfo.
      */
     public Recorder() {
-        this(GitInfo.from());
+        this(GitInfo.from(),() -> System.exit(-1));
     }
 
     /**
@@ -45,6 +55,10 @@ public class Recorder {
      */
     public void logRun() {
         if(Objects.equals(gitInfo.branch, NO_BRANCH)) return;
+        if(!gitInfo.problems.isEmpty()) {
+            gitInfo.problems.forEach( problem -> System.err.println(problem));
+            exit.run();
+        }
         initializeIfNeeded();
         writeToLog(gitInfo, new TimestampAppender(), new RunAppender());
     }
@@ -63,6 +77,10 @@ public class Recorder {
      */
     public void logTest(List<String> passes, List<String> fails, List<String> disables, List<String> aborts) {
         if(Objects.equals(gitInfo.branch, NO_BRANCH)) return;
+        if(!gitInfo.problems.isEmpty()) {
+            gitInfo.problems.forEach( problem -> System.err.println(problem));
+            exit.run();
+        }
         initializeIfNeeded();
         writeToLog(gitInfo,
                 new TimestampAppender(),
@@ -77,7 +95,7 @@ public class Recorder {
                 initializer.emitJunitFiles();
             }
             catch (Exception e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         }
     }
@@ -93,7 +111,7 @@ public class Recorder {
         } catch (Exception e) {
             System.err.println("Error: Could not record run!");
             e.printStackTrace();
-            System.exit(-1);
+            exit.run();
         }
     }
 

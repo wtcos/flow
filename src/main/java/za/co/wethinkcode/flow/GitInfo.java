@@ -117,7 +117,7 @@ public class GitInfo implements MapAppender {
             problems.add("Invalid email address in git repo [" + email + "].");
         }
         var username = configuration.getString("user", null, "name");
-        if(username==null || username.isEmpty() || !username.contains("@")) {
+        if(username==null || username.isEmpty()) {
             problems.add("Invalid user name  in git repo [" + username + "].");
         }
         var branch = tryBranch(localRepo);
