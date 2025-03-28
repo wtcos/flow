@@ -123,10 +123,14 @@ public class GitInfo implements MapAppender {
 
     static private String tryBranch(Repository localRepo) {
         try {
-            return localRepo.getBranch();
+            var fullbranch = localRepo.getFullBranch();
+            if(fullbranch.startsWith("refs/heads/")) {
+                return localRepo.getBranch();
+            }
+            return NO_BRANCH;
         }
         catch (Exception ignored) {
-            return "none";
+            return NO_BRANCH;
         }
     }
 
@@ -138,4 +142,6 @@ public class GitInfo implements MapAppender {
             return null;
         }
     }
+
+    public static final String NO_BRANCH = "none";
 }

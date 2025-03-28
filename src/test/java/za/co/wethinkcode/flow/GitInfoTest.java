@@ -1,6 +1,7 @@
 package za.co.wethinkcode.flow;
 
 import org.eclipse.jgit.api.*;
+import org.eclipse.jgit.api.errors.*;
 import org.junit.jupiter.api.*;
 
 import java.io.*;
@@ -70,6 +71,24 @@ public class GitInfoTest {
         assertThat(info.problems).isNotEmpty();
         folder.delete();
     }
+
+    @Test
+    void detachedHead() throws IOException, GitAPIException {
+        TestFolder folder = new TestFolder();
+        folder.initGitRepo();
+        Git git = Git.open(folder.root.toFile());
+        Files.writeString(folder.root.resolve("file.txt"),"Some string.");
+        git.add().addFilepattern(folder.root.toString()).call();
+        var commit = git.commit().setMessage("First").call();
+        var hash = commit.getName();
+        git.checkout().setName(hash).call();
+        git.close();
+        GitInfo info = GitInfo.from(folder.root);
+        assertThat(info.branch).isEqualTo(GitInfo.NO_BRANCH);
+        folder.delete();
+    }
+
+
 
     @Test
     void worksOnThisRepo() {
