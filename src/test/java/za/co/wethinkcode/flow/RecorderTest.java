@@ -1,5 +1,6 @@
 package za.co.wethinkcode.flow;
 
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.junit.jupiter.api.*;
 
 import java.io.*;
@@ -7,12 +8,23 @@ import java.nio.file.*;
 import java.util.*;
 
 import static java.util.Collections.*;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class RecorderTest {
 
     TestFolder folder = new TestFolder();
     GitInfo info = new GitInfo(folder.root, "branch", "committer", "email@somewhere.com", "last", new ArrayList<>());
+
+    @Test
+    void recorderNoopsOnDetachedHead() throws GitAPIException, IOException {
+        folder.initDetachedHead();
+        new Recorder(GitInfo.from(folder.root)).logRun();
+        assertThat(folder.temporaryFiles().length).isEqualTo(0);
+        new Recorder(GitInfo.from(folder.root)).logTest(emptyList(),emptyList(),emptyList(),emptyList());
+        assertThat(folder.temporaryFiles().length).isEqualTo(0);
+        folder.delete();
+    }
 
     @Test
     void roundTripTemporaryLog() throws IOException {

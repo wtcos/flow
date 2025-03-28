@@ -1,6 +1,7 @@
 package za.co.wethinkcode.flow;
 
 import org.eclipse.jgit.api.*;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import za.co.wethinkcode.flow.bash.*;
 
 import java.io.*;
@@ -48,7 +49,7 @@ public class TestFolder {
     }
 
     BashResult bash(String... args) {
-        return new BashRunner(root,args).bash();
+        return new BashRunner(root, args).bash();
     }
 
     private void recursivelyWipe(File directoryToBeDeleted) {
@@ -83,8 +84,7 @@ public class TestFolder {
         try {
             Git git = Git.init().setDirectory(root.toFile()).call();
             git.close();
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -95,11 +95,21 @@ public class TestFolder {
             Status status = git.status().call();
             git.close();
             return status;
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
+    void initDetachedHead() throws IOException, GitAPIException {
+        initGitRepo();
+        Git git = Git.open(root.toFile());
+        System.out.println(git.getRepository().getWorkTree().getName());
+        Files.writeString(root.resolve("file.txt"), "Some string.");
+        git.add().addFilepattern(root.toString()).call();
+        var commit = git.commit().setMessage("First").call();
+        var hash = commit.getName();
+        git.checkout().setName(hash).call();
+        git.close();
+    }
 
 }

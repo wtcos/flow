@@ -22,7 +22,7 @@ public class GitInfo implements MapAppender {
     public final Path root;
 
     /**
-     * The branch that is current in that repo, or "N/A" if there is no current branch.
+     * The branch that is current in that repo, or NO_BRANCH if there is no current branch.
      */
     public final String branch;
 
@@ -41,6 +41,9 @@ public class GitInfo implements MapAppender {
      */
     public final String last;
 
+    /**
+     * A list of any problems encountered during construction.
+     */
     public final List<String> problems;
 
     /**
@@ -97,10 +100,10 @@ public class GitInfo implements MapAppender {
         var problems = new ArrayList<String>();
         Repository localRepo = tryRepo(path);
         if (localRepo == null) {
-            problems.add("Could not find local repository ["+path.toAbsolutePath().normalize()+"].");
+            problems.add("Could not find local repository from ["+path.toAbsolutePath().normalize()+"].");
             return new GitInfo(
                     path,
-                    "N/A",
+                    NO_BRANCH,
                     "N/A",
                     "N/A",
                     "N/A",

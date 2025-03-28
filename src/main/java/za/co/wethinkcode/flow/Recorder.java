@@ -7,6 +7,7 @@ import java.time.format.*;
 import java.util.*;
 
 import static za.co.wethinkcode.flow.FileHelpers.*;
+import static za.co.wethinkcode.flow.GitInfo.NO_BRANCH;
 
 /**
  * The primary entry point to the Flow system. The key api's are logRun() to
@@ -17,7 +18,6 @@ import static za.co.wethinkcode.flow.FileHelpers.*;
  */
 public class Recorder {
     private final GitInfo gitInfo;
-    private final Path logPath;
 
     /**
      * Explicit constructor, normally used only in tests, which takes a GitInfo,
@@ -27,7 +27,6 @@ public class Recorder {
      */
     public Recorder(GitInfo gitInfo) {
         this.gitInfo = gitInfo;
-        this.logPath = gitInfo.computeTemporaryPath();
     }
 
     /**
@@ -45,6 +44,7 @@ public class Recorder {
      * applications main file.
      */
     public void logRun() {
+        if(Objects.equals(gitInfo.branch, NO_BRANCH)) return;
         initializeIfNeeded();
         writeToLog(gitInfo, new TimestampAppender(), new RunAppender());
     }
@@ -62,6 +62,7 @@ public class Recorder {
      * @param aborts The list of test names that were aborted.
      */
     public void logTest(List<String> passes, List<String> fails, List<String> disables, List<String> aborts) {
+        if(Objects.equals(gitInfo.branch, NO_BRANCH)) return;
         initializeIfNeeded();
         writeToLog(gitInfo,
                 new TimestampAppender(),
@@ -103,7 +104,7 @@ public class Recorder {
     private void appendToLogFile(String yaml) throws IOException {
         PrintWriter log = new PrintWriter(
                 Files.newBufferedWriter(
-                        logPath,
+                        gitInfo.computeTemporaryPath(),
                         StandardOpenOption.WRITE,
                         StandardOpenOption.APPEND,
                         StandardOpenOption.CREATE)

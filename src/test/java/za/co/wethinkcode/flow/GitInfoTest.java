@@ -75,20 +75,11 @@ public class GitInfoTest {
     @Test
     void detachedHead() throws IOException, GitAPIException {
         TestFolder folder = new TestFolder();
-        folder.initGitRepo();
-        Git git = Git.open(folder.root.toFile());
-        Files.writeString(folder.root.resolve("file.txt"),"Some string.");
-        git.add().addFilepattern(folder.root.toString()).call();
-        var commit = git.commit().setMessage("First").call();
-        var hash = commit.getName();
-        git.checkout().setName(hash).call();
-        git.close();
+        folder.initDetachedHead();
         GitInfo info = GitInfo.from(folder.root);
         assertThat(info.branch).isEqualTo(GitInfo.NO_BRANCH);
         folder.delete();
     }
-
-
 
     @Test
     void worksOnThisRepo() {
