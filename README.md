@@ -7,7 +7,8 @@ _how_ they work.
 This readme is very light, and is intended only for a quickstart. The heavier and more 
 complete documentation can be found at flow's sister project, [vnitpick](https://github.com/wethinkcode/nitpick2/wiki).
 
-https://maven-badges.herokuapp.com/sonatype-central/za.co.wethinkcode/flow/badge.png
+[![Maven Central](
+https://maven-badges.herokuapp.com/sonatype-central/za.co.wethinkcode/flow/badge.png)
 
 ## Four Types of Projects
 
