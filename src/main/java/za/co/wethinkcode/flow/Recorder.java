@@ -25,6 +25,7 @@ public class Recorder {
      * which may be hand-built.
      *
      * @param gitInfo The GitInfo needed for the Recorder's other functions.
+     * @param exit A runnable telling us what to do if there are show-stopper problems
      */
     public Recorder(GitInfo gitInfo, Runnable exit) {
         this.gitInfo = gitInfo;
@@ -32,8 +33,9 @@ public class Recorder {
     }
 
     /**
-     * Constructor that assumes that the current working directory can supply the
-     * required GitInfo.
+     * Constructor based on an already configured GitInfo. Normally only used in tests.
+     *
+     * @param info The necessary GitInfo
      */
     public Recorder(GitInfo info) {
         this(info,() -> System.exit(-1));

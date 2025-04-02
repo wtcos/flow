@@ -48,6 +48,12 @@ public class GitInfo implements MapAppender {
 
     /**
      * The primitive "all fields" constructor, used only for testing.
+     * @param root The path to the folder containing the .git folder.
+     * @param branch The current branch
+     * @param username The git user.name config
+     * @param email The git user.email config
+     * @param last The most recent SHA-1 from the repo's head
+     * @param problems A list of "show-stopper" problem strings
      */
     public GitInfo(Path root, String branch, String username, String email, String last, List<String> problems) {
         this.root = root;
@@ -92,10 +98,22 @@ public class GitInfo implements MapAppender {
         return "Unknown";
     }
 
+    /**
+     * Same as from(Path path), with the parameter defaulted to the current folder.
+     *
+     * @return The GitInfo extracted from that folder (or its parent)
+     */
     static public GitInfo from() {
         return from(Path.of("."));
     }
 
+    /**
+     * Create a GitInfo by deducing all of its values from the .git folder at or
+     * above the path parameter.
+     *
+     * @param path The path to start looking for the .git folder
+     * @return The GitInfo created based on the path.
+     */
     static public GitInfo from(Path path) {
         var problems = new ArrayList<String>();
         Repository localRepo = tryRepo(path);
@@ -146,5 +164,9 @@ public class GitInfo implements MapAppender {
         }
     }
 
+    /**
+     * A sentinel value to indicate we are not on a branch, normally meaning that we
+     * are in a detached head state.
+     */
     public static final String NO_BRANCH = "none";
 }
