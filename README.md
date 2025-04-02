@@ -30,7 +30,7 @@ in their sub-folders.
 
 ### Starter Repositories
 
-These are the resulting repos that students fork from in order to work a given exercise or 
+These are the repos that students fork from in order to work a given exercise or 
 assessment. At WeThinkCode, these are created automatically using the subfolders mentioned from 
 authoring repos. It is also possible to create a starter repo manually, w/o using an authoring repo.
 
@@ -65,7 +65,37 @@ There are four steps to installing flow.
 3) Add a .gitignore entry to ignore the temporary log files created by Flow.
 4) Add a static block to the class(es) containing the project's `main()` method.
 
+#### The Flow Dependency
 
+[![Maven Central](
+https://maven-badges.herokuapp.com/sonatype-central/za.co.wethinkcode/flow/badge.png)](https://central.sonatype.com/artifact/za.co.wethinkcode/flow)
 
+The badge above reflects the current version.
+
+Add Flow as a dependency in gradle:
+```kotlin
+dependencies {
+    implementation("za.co.wethinkcode:flow:[VERSION]")
+}
+```
+
+Add Flow as a dependency in maven:
+
+```xml
+    <dependencies>
+        <dependency>
+            <groupId>za.co.wethinkcode</groupId>
+            <artifactId>flow</artifactId>
+            <version>[VERSION]</version>
+        </dependency>
+    </dependencies>
+```
+
+#### The SLF4J Dependency
+
+This step is only needed if a) your project does not already use SLF4J, and b) you are, like us, people who do not tolerate warning messages.
+
+[![Maven Central](
+https://maven-badges.herokuapp.com/sonatype-central/org.slf4j/slf4j-nop/badge.png)](https://central.sonatype.com/artifact/org.slf4j/slf4j-nop)
 
 
