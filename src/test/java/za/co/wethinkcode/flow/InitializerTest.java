@@ -51,7 +51,7 @@ public class InitializerTest {
         assertTrue(Files.exists(junitProperties));
         Path metaInf = folder.root.resolve("src/test/resources/META-INF/services/org.junit.jupiter.api.extension.Extension");
         assertTrue(Files.exists(metaInf));
-        Path extension = folder.root.resolve("src/test/java/za/co/wethincode/flow/WtcJunitExtension.java");
+        Path extension = folder.root.resolve("src/test/java/za/co/wethinkcode/flow/WtcJunitExtension.java");
         assertTrue(Files.exists(extension));
     }
 
