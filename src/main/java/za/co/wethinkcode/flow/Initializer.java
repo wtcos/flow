@@ -72,9 +72,17 @@ public class Initializer {
         writer.write("za.co.wethinkcode.flow.WtcJunitExtension\n");
         writer.flush();
         writer.close();
+        Path extensionFolder = projectRoot.resolve("src/test/java/za/co/wethinkcode/flow/");
+        Files.createDirectories(extensionFolder);
+        Path extensionPath = extensionFolder.resolve("WtcJunitExtension.java");
+        writer = Files.newBufferedWriter(extensionPath);
+        writer.write(wtcJunitExtensionText);
+        writer.flush();
+        writer.close();
         try {
             Git git = Git.open(gitRoot.toFile());
             git.add().addFilepattern("src/test/resources").call();
+            git.add().addFilepattern("src/test/java/za/co/wethinkcode/flow").call();
             git.commit().setMessage("Adding flow src/test/resources.").call();
             git.close();
         }
@@ -104,6 +112,71 @@ public class Initializer {
         writer.flush();
         writer.close();
     }
+
+    private static final String wtcJunitExtensionText = """
+            package za.co.wethinkcode.flow;
+            
+            import org.junit.jupiter.api.extension.*;
+            
+            import java.lang.reflect.*;
+            import java.util.*;
+            
+            /**
+             * A custom JUnitExtension that overrides JUnit's TestWatcher
+             * to remember test runs and add them to a Flow temp file on exit.
+             */
+            public class WtcJunitExtension implements TestWatcher {
+            
+                @Override
+                public void testSuccessful(ExtensionContext context) {
+                    if (context == null) return;
+                    passes.add(niceTestName(context));
+                }
+            
+                private String niceTestName(ExtensionContext context) {
+                    Method test = context.getRequiredTestMethod();
+                    return test.getDeclaringClass().getSimpleName() + "." + test.getName();
+                }
+            
+                @Override
+                public void testDisabled(ExtensionContext context, Optional<String> reason) {
+                    if (context == null) return;
+                    disables.add(niceTestName(context));
+                }
+            
+                @Override
+                public void testAborted(ExtensionContext context, Throwable cause) {
+                    if (context == null) return;
+                    aborts.add(niceTestName(context));
+                }
+            
+                @Override
+                public void testFailed(ExtensionContext context, Throwable cause) {
+                    if (context == null) return;
+                    fails.add(niceTestName(context));
+                }
+            
+                private static final Recorder recorder = new Recorder();
+                private static final List<String> passes = new ArrayList<>();
+                private static final List<String> fails = new ArrayList<>();
+                private static final List<String> disables = new ArrayList<>();
+                private static final List<String> aborts = new ArrayList<>();
+            
+                private static final Runnable runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        System.out.println("Shutdown");
+                        recorder.logTest(passes, fails, disables, aborts);
+                    }
+                };
+                private static final Thread hook = new Thread(runnable);
+                private static final Runtime runtime = Runtime.getRuntime();
+            
+                static {
+                    runtime.addShutdownHook(hook);
+                }
+            }
+            """;
 
 
     private static final String precommitText = """

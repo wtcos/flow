@@ -12,18 +12,23 @@ plugins {
 
 
 dependencies {
-    implementation("org.junit.jupiter:junit-jupiter:5.9.3")
-    implementation("org.junit.jupiter:junit-jupiter-api:5.9.3")
     implementation("org.eclipse.jgit:org.eclipse.jgit:6.8.0.202311291450-r")
     implementation("org.yaml:snakeyaml:2.0")
     implementation("org.slf4j:slf4j-nop:2.0.7")
     testImplementation("org.buildobjects:jproc:2.8.2")
     testImplementation("org.assertj:assertj-core:3.24.2")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.9.3")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.3")
 }
 
 java {
-    withJavadocJar()
-    withSourcesJar()
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(21))
+    }
+    java {
+        withJavadocJar()
+        withSourcesJar()
+    }
 }
 
 tasks.named<Test>("test") {
